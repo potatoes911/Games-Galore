@@ -61,7 +61,156 @@
       <center><p>that allows players to play on dedicated Valve servers, in addition to community-hosted servers with custom maps and game modes.</p></center>
       <center><p>A battle-royale game-mode, "Danger Zone", was introduced in late 2018.</p></center>
 
-
+      <title>Comment Section</title>
+      <style>
+          .comment-section {
+              max-width: 800px;
+              margin: 20px auto;
+              padding: 20px;
+              font-family: Arial, sans-serif;
+          }
+  
+          .comment-form {
+              background-color: #000000;
+              padding: 20px;
+              border-radius: 8px;
+              margin-bottom: 30px;
+          }
+  
+          .comment-form input, 
+          .comment-form textarea {
+              width: 100%;
+              padding: 10px;
+              margin: 10px 0;
+              border: 1px solid #00ff37;
+              border-radius: 4px;
+              box-sizing: border-box;
+          }
+  
+          .comment-form button {
+              background-color: #00ff08;
+              color: rgb(0, 0, 0);
+              padding: 12px 20px;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+          }
+  
+          .comment-form button:hover {
+              background-color: #45a049;
+          }
+  
+          .comments-list {
+              margin-top: 20px;
+          }
+  
+          .comment {
+              background-color: #000000;
+              border: 1px solid #00ff4c;
+              border-radius: 4px;
+              padding: 15px;
+              margin-bottom: 15px;
+          }
+  
+          .comment-header {
+              display: flex;
+              align-items: center;
+              margin-bottom: 10px;
+          }
+  
+          .comment-author {
+              font-weight: bold;
+              margin-right: 15px;
+              color: #1da55a;
+          }
+  
+          .comment-date {
+              color: #0d7e49;
+              font-size: 0.9em;
+          }
+  
+          .comment-text {
+              color: #00ff37;
+              line-height: 1.5;
+          }
+      </style>
+  </head>
+  <body>
+      <div class="comment-section">
+          <form class="comment-form" id="commentForm">
+              <h2  style="background-color:rgb(2, 255, 65);">Leave a Comment</h2>
+              <input type="text" id="name" placeholder="Your Name" required>
+              <textarea id="comment" rows="4" placeholder="Write your comment here..." required></textarea>
+              <button type="submit">Post Comment</button>
+          </form>
+  
+          <div class="comments-list" id="commentsList">
+              <!-- Existing comments will be added here -->
+          </div>
+      </div>
+  
+      <script>
+          // Handle form submission
+          document.getElementById('commentForm').addEventListener('submit', function(e) {
+              e.preventDefault();
+              
+              // Get input values
+              const name = document.getElementById('name').value;
+              const commentText = document.getElementById('comment').value;
+              
+              if (name && commentText) {
+                  // Create new comment element
+                  const commentDiv = document.createElement('div');
+                  commentDiv.className = 'comment';
+                  
+                  const date = new Date().toLocaleDateString();
+                  
+                  commentDiv.innerHTML = `
+                      <div class="comment-header">
+                          <span class="comment-author">${name}</span>
+                          <span class="comment-date">${date}</span>
+                      </div>
+                      <p class="comment-text">${commentText}</p>
+                  `;
+                  
+                  // Add comment to the top of the list
+                  document.getElementById('commentsList').prepend(commentDiv);
+                  
+                  // Clear form fields
+                  document.getElementById('name').value = '';
+                  document.getElementById('comment').value = '';
+                  
+                  // Save comment to localStorage (optional)
+                  saveCommentToStorage(name, commentText, date);
+              }
+          });
+  
+          // Optional: Save comments to localStorage
+          function saveCommentToStorage(name, text, date) {
+              const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+              comments.unshift({ name, text, date });
+              localStorage.setItem('comments', JSON.stringify(comments));
+          }
+  
+          // Optional: Load comments from localStorage when page loads
+          window.addEventListener('load', function() {
+              const comments = JSON.parse(localStorage.getItem('comments') || '[]');
+              const commentsList = document.getElementById('commentsList');
+              
+              comments.forEach(comment => {
+                  const commentDiv = document.createElement('div');
+                  commentDiv.className = 'comment';
+                  commentDiv.innerHTML = `
+                      <div class="comment-header">
+                          <span class="comment-author">${comment.name}</span>
+                          <span class="comment-date">${comment.date}</span>
+                      </div>
+                      <p class="comment-text">${comment.text}</p>
+                  `;
+                  commentsList.appendChild(commentDiv);
+              });
+          });
+      </script>
 
 </body>
 </html>
